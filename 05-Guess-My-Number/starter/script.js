@@ -40,7 +40,8 @@ check_el.addEventListener('click', function() {
         number_el.textContent = secretNumber;
         //check high score
         if(score > highScore) {
-          highscore_el.textContent = score;
+          highScore = score;
+          highscore_el.textContent = highScore;
         }
       } else if(guess > secretNumber) {
         //display go lower
