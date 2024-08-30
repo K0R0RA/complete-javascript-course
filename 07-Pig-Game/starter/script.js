@@ -9,6 +9,7 @@ const newgbtn_el = document.querySelector('.btn--new');
 
 //functions
 function changeTurn(thisTurn) {
+    game[thisTurn]['current'] = 0;
     let nextTurn = (thisTurn + 1)%2;
     let current_el = document.querySelector(`.player--${thisTurn}`);
     let next_el = document.querySelector(`.player--${nextTurn}`);
@@ -23,8 +24,20 @@ function getRoll() {
     diceimg_el.setAttribute('src',imgName);
     return thisRoll;
 }
-function updatePlayerScores(player) {
-    let side_el = document.querySelector('.player--')
+function resetGame() {
+    turn = changeTurn(1);
+    game = [{'current':0,'score':0},{'current':0,'score':0}];
+    updatePlayerScores();
+}
+function updatePlayerScores() {
+    if (game[turn]['score'] > 30) {
+        document.querySelector(`#score--${turn}`).textContent = 'Wins!';
+    } else {
+        document.querySelector(`#score--0`).textContent = game[0]['score'];
+        document.querySelector(`#current--0`).textContent = game[0]['current'];
+        document.querySelector(`#score--1`).textContent = game[1]['score'];
+        document.querySelector(`#current--1`).textContent = game[1]['current'];
+    }
 }
 
 //initialize the game
@@ -39,25 +52,17 @@ rollbtn_el.addEventListener('click',function(){
     if(roll == 1) {
         game[turn]['score'] = 0;
         game[turn]['current'] = 0;
-        
         turn = changeTurn(turn);
-        console.log(`Turn changed to ${turn}`);
-        console.log(game);
     } else {
         game[turn]['score'] += roll;
         game[turn]['current'] += roll;
-        console.log(game);
     }
-    updatePlayerScores(turn);
+    updatePlayerScores();
 });
 
 holdbtn_el.addEventListener('click',function(){
     turn = changeTurn(turn);
-    console.log(`Turn changed to ${turn}`);
 });
 
-newgbtn_el.addEventListener('click',function() {
-    turn = 0;
-    game = [{'current':0,'score':0},{'current':0,'score':0}];
-});
+newgbtn_el.addEventListener('click',resetGame);
 
