@@ -30,6 +30,10 @@ const restaurant = {
   starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
   mainMenu: ['Pizza', 'Pasta', 'Risotto'],
 
+  order: function(starterIndex, mainIndex) {
+    return [this.starterMenu[starterIndex],this.mainMenu[mainIndex]];
+  },
+
   openingHours: {
     thu: {
       open: 12,
@@ -45,3 +49,40 @@ const restaurant = {
     },
   },
 };
+
+// manually breaking apart an array
+// const arr = [2,3,4];
+// const a = arr[0];
+// const b = arr[1];
+// const c = arr[2];
+
+//destructuring an array
+// const [x,y,z] = arr; 
+// console.log(x,y,z);
+// console.log(arr);
+
+// to skip an element, just leave a blank in the destructuring syntax
+let [main,,secondary] = restaurant.categories;
+console.log(main,secondary);
+
+//switch variables with destrucuring
+[main,secondary] = [secondary, main];
+console.log(main,secondary);
+
+//console.log(restaurant.order(2,0));
+//Receive 2 return values from a function. 
+const [starter,mainCourse] = restaurant.order(2,0);
+console.log(starter,mainCourse);
+
+const nested = [2,4,[5,6]];
+// let [one,,innerArr] = nested;
+// console.log(one,innerArr);
+
+//nested destructuring
+let [one,,[i,j]] = nested;
+console.log(one,i,j);
+
+//setting default values for destructuring
+//useful for getting destructuring unknown arrays
+const [p=1,q=1,r=1] = [8,9];
+console.log(p,q,r);
