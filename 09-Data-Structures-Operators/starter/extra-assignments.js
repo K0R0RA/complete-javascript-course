@@ -225,8 +225,45 @@ const books = [
 // console.log(bookRating);
 
 //2.6
-function printBookInfo({title,author,year='year unknown'}) {
-  console.log(`${title} by ${author}, ${year}`);
-}
-printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick', year: '2011' });
-printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick' });
+// function printBookInfo({title,author,year='year unknown'}) {
+//   console.log(`${title} by ${author}, ${year}`);
+// }
+// printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick', year: '2011' });
+// printBookInfo({ title: 'Algorithms', author: 'Robert Sedgewick' });
+
+//3.1 
+// let bookAuthors = [...books[0].author,...books[1].author];
+// console.log(bookAuthors);
+
+//3.2
+// function spellWord(inString) {
+//   console.log(...inString)
+// }
+// spellWord("Casey");
+
+//4.1 Rest Pattern and Parameters
+// let [mainKeyword, ...rest] = books[0].keywords;
+// console.log(mainKeyword,rest);
+
+//4.2 Destructuring Objects
+// const {publisher: bookPublisher, ...restOfTheBook} = books[1];
+// console.log(bookPublisher,restOfTheBook);
+
+//4.3 
+// function printBookAuthorsCount(title,...authors) {
+//   console.log(`The book \"${title}\" has ${authors.length} authors.`);
+// }
+// printBookAuthorsCount('Algorithms','Robert Sedgewick','Kevin Wayne');
+
+//5.1 short circuit evaluation ||
+// function hasExamplesInJava(inBook) {
+//   return inBook.programmingLanguage == 'Java' || 'no data available';
+// }
+// console.log(hasExamplesInJava(books[0]));
+// console.log(hasExamplesInJava(books[1]));
+
+//5.2 short circuit && 
+// for(let i=0; i<books.length; i++) {
+//   books[i].onlineContent && console.log(`"${books[i].title}" provides online content`);
+// }
+
