@@ -267,3 +267,23 @@ const books = [
 //   books[i].onlineContent && console.log(`"${books[i].title}" provides online content`);
 // }
 
+//6.1 Nullish Coalescing Operator ??
+// for(let i=0; i<books.length; i++) {
+//   books[i].onlineContent ?? console.log(`"${books[i].title}" provides no data about its online content`);
+// }
+
+//7.1 Logical Assignments Operators
+// rest1.numGuests = rest1.numGuests || 10;    SAME AS    rest1.numGuests ||= 10;
+// rest1.numGuests = rest1.numGuests ?? 10;    SAME AS    rest1.numGuests ??= 10; 
+// rest1.owner = rest1.owner && 'ANONYMOUS';   SAME AS    rest1.owner &&= 'ANONYMOUS';
+// for(let i=0; i<books.length; i++) {
+//   books[i].edition ||= 1;
+//   console.log(books[i].edition)
+// }
+
+//7.2 
+// for(let i=0; i<books.length; i++) {
+//   books[i].highlighted &&= !(books[i].thirdParty.goodreads.rating < 4.2);
+//   console.log(books[i].highlighted)
+// }
+
