@@ -55,15 +55,15 @@ const restaurant = {
 
 };
 
-restaurant.orderDelivery({
-  time: '23:30',
-  address: 'Via del Sole, 21',
-  mainIndex: 2,
-  starterIndex: 2
-});
-restaurant.orderDelivery({
-  address: '140 Shady Vly'
-})
+// restaurant.orderDelivery({
+//   time: '23:30',
+//   address: 'Via del Sole, 21',
+//   mainIndex: 2,
+//   starterIndex: 2
+// });
+// restaurant.orderDelivery({
+//   address: '140 Shady Vly'
+// })
 
 // manually breaking apart an array
 // const arr = [2,3,4];
@@ -105,21 +105,70 @@ restaurant.orderDelivery({
 
 //Object destructuring
 const {name,openingHours, categories} = restaurant;
-console.log(name,openingHours,categories);
+//console.log(name,openingHours,categories);
 
 const{name:restaurantName,openingHours:hours,categories:tags} = restaurant;
-console.log(restaurantName,hours,tags);
+//console.log(restaurantName,hours,tags);
 
 const {menu = [], starterMenu: starters=[]} = restaurant;
-console.log(menu,starters);
+//console.log(menu,starters);
 
 //mutating variables
 let a = 111;
 let b = 999;
 const obj = {a:23,b:7,c:14};
 ({a,b} = obj); //you have to wrap the object in () or it thinks it's a code block
-console.log(a,b);
+// console.log(a,b);
 
 //nested objects
 const {fri:{open:o,close:c}} = openingHours;
-console.log(o,c);
+// console.log(o,c);
+
+const weekdays = ['mon','tue','wed','thu','fri','sat','sun'];
+
+//optional chaining ?. 
+if(restaurant.openingHours.mon) console.log(restaurant.openingHours.mon.open);
+//only if the property before ?. exists, then retrieve, otherwise return undefined
+// console.log(restaurant.openingHours.mon?.open); //disallows reading open because mon is undefined
+// console.log(restaurant.openingHours.mon.open); //tries to read open from undefined
+// console.log(restaurant.openingHours?.mon?.open);
+
+// for (let day of weekdays) {
+//   console.log(day);
+//   let open = restaurant.openingHours[day]?.open ?? 'closed';
+//   console.log(`On ${day}, we open at ${open}`);
+// }
+
+// //optional chaining on methods: check if a method exists before calling
+// console.log(restaurant.order?.(0,1) ?? 'Method does not exists');
+// console.log(restaurant.orderRisotto?.(0,1) ?? 'Method does not exist');
+
+// //option chaining on arrays: check if an array is empty
+// const users = [
+//   {name: 'Jonas', email: 'hello@jonas.io'}
+// ]
+// const users2 = [];
+// console.log(users[0]?.name ?? 'User array empty');
+// console.log(users2[0]?.name ?? 'User array empty');
+
+//Property Keys
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+let openStr = `We are open on ${properties.length} days: `;
+console.log(`We are open on ${properties.length} days`);
+
+for (let day of Object.keys(openingHours)) {
+  openStr += `${day}`;
+}
+//Property Values
+const values = Object.values(openingHours);
+console.log(values);
+
+//Property Key+Values
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+for(let [key,{open,close}] of entries) {
+  console.log(`On ${key} we open at ${open} and close at ${close}`);
+} 
