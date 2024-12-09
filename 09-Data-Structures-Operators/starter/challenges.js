@@ -120,3 +120,24 @@ BONUS: Create an object called 'scorers' which contains the names of the players
 
 GOOD LUCK 😀
 */
+// 1.
+for (let [i,player] of game.scored.entries())
+    console.log(`Goal ${i+1}: ${player}`);
+// 2. Calculate average of game odds. 
+//odds: {
+//     team1: 1.33,
+//     x: 3.25,
+//     team2: 6.5
+// },
+let average = 0;
+for (let value of Object.values(game.odds))
+    if (typeof(value) === 'number') {
+        average += value;
+    } 
+average /= Object.values(game.odds).length;
+console.log(`The average of odds is ${average}.`);
+
+// 3.
+for (let [key,value] of Object.entries(game.odds)) {
+    console.log(`Odds of ${game[key]||'draw'}: ${value}`);
+}
