@@ -141,3 +141,17 @@ console.log(`The average of odds is ${average}.`);
 for (let [key,value] of Object.entries(game.odds)) {
     console.log(`Odds of ${game[key]||'draw'}: ${value}`);
 }
+
+// BONUS: Create an object called 'scorers' which contains the names of the players who scored as properties, and the number of goals as the value. In this game, it will look like this:
+//       {
+//         Gnarby: 1,
+//         Hummels: 1,
+//         Lewandowski: 2
+//       }
+//scored: ['Lewandowski','Gnarby','Lewandowski','Hummels'],
+const scorers = {};
+for (let value of Object.values(game.scored)) {
+    if(scorers[value]) scorers[value] += 1;
+    else scorers[value] = 1;
+}
+console.log(scorers);
