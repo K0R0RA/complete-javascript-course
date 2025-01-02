@@ -152,23 +152,122 @@ if(restaurant.openingHours.mon) console.log(restaurant.openingHours.mon.open);
 // console.log(users2[0]?.name ?? 'User array empty');
 
 //Property Keys
-const properties = Object.keys(openingHours);
-console.log(properties);
+// const properties = Object.keys(openingHours);
+// console.log(properties);
 
-let openStr = `We are open on ${properties.length} days: `;
-console.log(`We are open on ${properties.length} days`);
+// let openStr = `We are open on ${properties.length} days: `;
+// console.log(`We are open on ${properties.length} days`);
 
-for (let day of Object.keys(openingHours)) {
-  openStr += `${day}`;
-}
-//Property Values
-const values = Object.values(openingHours);
-console.log(values);
+// for (let day of Object.keys(openingHours)) {
+//   openStr += `${day}`;
+// }
+// //Property Values
+// const values = Object.values(openingHours);
+// console.log(values);
 
-//Property Key+Values
-const entries = Object.entries(openingHours);
-console.log(entries);
+// //Property Key+Values
+// const entries = Object.entries(openingHours);
+// console.log(entries);
 
-for(let [key,{open,close}] of entries) {
-  console.log(`On ${key} we open at ${open} and close at ${close}`);
-} 
+// for(let [key,{open,close}] of entries) {
+//   console.log(`On ${key} we open at ${open} and close at ${close}`);
+// } 
+
+//9.120 Sets (getting unique values from arrays)
+// const orderSet = new Set(['Pasta','Pizza','Pizza','Risotto','Pasta','Pizza']);
+// console.log(orderSet);
+
+// console.log(new Set('Casey'));
+
+// console.log(orderSet.size);
+
+// console.log(orderSet.has('Pizza'));
+// console.log(orderSet.has('Bread'));
+
+// orderSet.add('Garlic Bread');
+// orderSet.add('Garlic Bread');
+// orderSet.delete('Risotto');
+// // orderSet.clear();
+// // console.log(orderSet[0]); //is undefined because order doesn't matter
+// console.log(orderSet);
+
+// for (const order of orderSet) console.log(order);
+
+// const staff = ['waiter','chef','waiter','manager','host','chef','waiter'];
+// const staffDistinct = [...new Set(staff)]; //the spread operator works to convert the Set iterable object back into an array
+// console.log(staffDistinct);
+
+
+// //New operators to make sets useful
+// const italianFoods = new Set(['pasta','gnocchi','tomatoes','olive oil','garlic','basil']);
+// const mexicanFoods = new Set(['totillas,','beans','rice','tomatoes','avocado','garlic']);
+
+// // ES2025 intersection method contains only the items contained in both sets 
+// const commonFoods = [...italianFoods.intersection(mexicanFoods)];
+// console.log(commonFoods);
+
+// // ES2025 union method gives all distinct items in multiple sets
+// const italianMexicanFusion = [...mexicanFoods.union(italianFoods)];
+// console.log(italianMexicanFusion);
+// //same as union 
+// const combinedArrVersion = [...new Set([...italianFoods, ...mexicanFoods])];
+// console.log(combinedArrVersion);
+
+// // ES2025 difference method gives a new set with all the elements present in first set, but not the second
+// const italianOnly = italianFoods.difference(mexicanFoods);
+// console.log(italianOnly);
+// const mexicanOnly = mexicanFoods.difference(italianFoods);
+// console.log(mexicanOnly);
+
+// // ES2025 symmetricDifference all elements present in either set but not in both, opposite of intersection method
+// const differentFoods = italianFoods.symmetricDifference(mexicanFoods);
+// console.log(differentFoods);
+
+// // Check to see if there are no elements repeated in either set. 
+// console.log(italianFoods.isDisjointFrom(mexicanFoods));
+
+// Maps : data structure to map data to keys, the keys can have any type vs only strings like objects. 
+const rest = new Map();
+//add key=>value sets using the .set()
+rest.set('name','Classico Italiano');
+rest.set(1,'Firenze,Italy');
+rest.set(2,'Lisbon, Portugal');
+
+//set() can be chained
+rest.set('categories',['Italian','PIzzeria','Vegetarian','Organic'])
+  .set('open',11)
+  .set('close',23)
+  .set (true,'We are open!')
+  .set(false,'We are closed.');
+
+//access values by .get()
+console.log(rest.get(true));
+console.log(rest.get(false));
+console.log(rest.get(1));
+console.log(rest.get('1')); //the datatype of the key matters!
+
+const time = 21;
+//power of boolean as map keys
+console.log(rest.get(time > rest.get('open') && time < rest.get('close')));
+
+//check if a key exists in the map
+console.log(rest.has('categories')); //true
+
+//deletes a key=>value from the map
+rest.delete(2);
+
+//array as the key
+rest.set([1,2],'Test');
+console.log(rest.get([1,2]));
+
+const arr = [1,2];
+rest.set(arr,'Test');
+rest.set(document.querySelector('h1'),'Heading');
+console.log(rest.get(arr));
+
+ console.log(rest);
+
+//rest.clear();
+// console.log(rest.size);
+
+

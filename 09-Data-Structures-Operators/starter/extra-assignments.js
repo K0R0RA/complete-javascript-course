@@ -340,14 +340,58 @@ const books = [
 // console.log(getFirstKeyword(books[0]));
 
 //11.1
-const entries = [];
-for(let key of Object.keys(books[0].thirdParty.goodreads)) {
-  entries.push([key]);
-}
-//console.log(entries);
+// const entries = [];
+// for(let key of Object.keys(books[0].thirdParty.goodreads)) {
+//   entries.push([key]);
+// }
+// //console.log(entries);
 
-//11.2
-for(let [index,value] of Object.values(books[0].thirdParty.goodreads).entries()) {
-  entries[index].push(value);
-}
-console.log(entries);
+// //11.2
+// for(let [index,value] of Object.values(books[0].thirdParty.goodreads).entries()) {
+//   entries[index].push(value);
+// }
+// console.log(entries);
+
+// //12.1 Sets
+// const allKeywords = [];
+// for (let book of books) {
+//   allKeywords.push(...book.keywords);
+// }
+// //12.2
+// let uniqueWords = new Set(allKeywords)
+// console.log(uniqueWords);
+
+// //12.3
+// uniqueWords.add('coding');
+// uniqueWords.add('science');
+// console.log(uniqueWords); 
+
+// //12.4 
+// uniqueWords.delete('business');
+// console.log(uniqueWords);
+
+// //12.5
+// let uniqueKeywords = [...uniqueWords];
+// console.log(uniqueKeywords); 
+
+// //12.6
+// uniqueWords.clear();
+// console.log(uniqueWords);
+
+//13.1 Maps
+const bookMap = new Map([['title', 'Clean Code'], ['author', 'Robert C. Martin']]);
+console.log(bookMap);
+
+//13.2 
+bookMap.set('pages',464);
+console.log(bookMap);
+
+//13.3
+console.log(`${bookMap.get('title')} by ${bookMap.get('author')}`);
+
+//13.4 
+console.log(bookMap.size);
+
+//13.5
+//bookMap.delete('author');
+console.log(bookMap.has('author') ? `The author of the book is known. They are ${bookMap.get('author')}.` : "The author is unknown.");
