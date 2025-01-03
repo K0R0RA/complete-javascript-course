@@ -227,47 +227,77 @@ if(restaurant.openingHours.mon) console.log(restaurant.openingHours.mon.open);
 // console.log(italianFoods.isDisjointFrom(mexicanFoods));
 
 // Maps : data structure to map data to keys, the keys can have any type vs only strings like objects. 
-const rest = new Map();
-//add key=>value sets using the .set()
-rest.set('name','Classico Italiano');
-rest.set(1,'Firenze,Italy');
-rest.set(2,'Lisbon, Portugal');
+// const rest = new Map();
+// //add key=>value sets using the .set()
+// rest.set('name','Classico Italiano');
+// rest.set(1,'Firenze,Italy');
+// rest.set(2,'Lisbon, Portugal');
 
-//set() can be chained
-rest.set('categories',['Italian','PIzzeria','Vegetarian','Organic'])
-  .set('open',11)
-  .set('close',23)
-  .set (true,'We are open!')
-  .set(false,'We are closed.');
+// //set() can be chained
+// rest.set('categories',['Italian','PIzzeria','Vegetarian','Organic'])
+//   .set('open',11)
+//   .set('close',23)
+//   .set (true,'We are open!')
+//   .set(false,'We are closed.');
 
-//access values by .get()
-console.log(rest.get(true));
-console.log(rest.get(false));
-console.log(rest.get(1));
-console.log(rest.get('1')); //the datatype of the key matters!
+// //access values by .get()
+// console.log(rest.get(true));
+// console.log(rest.get(false));
+// console.log(rest.get(1));
+// console.log(rest.get('1')); //the datatype of the key matters!
 
-const time = 21;
-//power of boolean as map keys
-console.log(rest.get(time > rest.get('open') && time < rest.get('close')));
+// const time = 21;
+// //power of boolean as map keys
+// console.log(rest.get(time > rest.get('open') && time < rest.get('close')));
 
-//check if a key exists in the map
-console.log(rest.has('categories')); //true
+// //check if a key exists in the map
+// console.log(rest.has('categories')); //true
 
-//deletes a key=>value from the map
-rest.delete(2);
+// //deletes a key=>value from the map
+// rest.delete(2);
 
-//array as the key
-rest.set([1,2],'Test');
-console.log(rest.get([1,2]));
+// //array as the key
+// rest.set([1,2],'Test');
+// console.log(rest.get([1,2]));
 
-const arr = [1,2];
-rest.set(arr,'Test');
-rest.set(document.querySelector('h1'),'Heading');
-console.log(rest.get(arr));
+// const arr = [1,2];
+// rest.set(arr,'Test');
+// rest.set(document.querySelector('h1'),'Heading');
+// console.log(rest.get(arr));
 
- console.log(rest);
+//  console.log(rest);
 
 //rest.clear();
 // console.log(rest.size);
 
+const question = new Map([
+  ['question','What is the best programming language in the world?'],
+  [1,'C'],
+  [2,'Java'],
+  [3,'Python'],
+  [4,'Javascript'],
+  ['correct',4],
+  [true,'Correct!'],
+  [false,'Try again.']
+]);
+console.log(question);
 
+//converting object(non-iterable) to map(iterable)
+console.log(Object.entries(openingHours));
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+//map iteration
+console.log(question.get('question')); 
+for (let [key,value] of question) {
+  if(typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+}
+const answer = 4; //Number(prompt('Your answer:'));
+console.log(answer);
+
+console.log(question.get(answer == question.get('correct')));
+
+//convert map back to an array
+console.log([...question]);
+console.log([...question.keys()]);
+console.log([...question.values()]);

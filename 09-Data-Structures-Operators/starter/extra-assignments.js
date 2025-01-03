@@ -378,20 +378,29 @@ const books = [
 // uniqueWords.clear();
 // console.log(uniqueWords);
 
-//13.1 Maps
-const bookMap = new Map([['title', 'Clean Code'], ['author', 'Robert C. Martin']]);
-console.log(bookMap);
+// //13.1 Maps
+// const bookMap = new Map([['title', 'Clean Code'], ['author', 'Robert C. Martin']]);
+// console.log(bookMap);
 
-//13.2 
-bookMap.set('pages',464);
-console.log(bookMap);
+// //13.2 
+// bookMap.set('pages',464);
+// console.log(bookMap);
 
-//13.3
-console.log(`${bookMap.get('title')} by ${bookMap.get('author')}`);
+// //13.3
+// console.log(`${bookMap.get('title')} by ${bookMap.get('author')}`);
 
-//13.4 
-console.log(bookMap.size);
+// //13.4 
+// console.log(bookMap.size);
 
-//13.5
-//bookMap.delete('author');
-console.log(bookMap.has('author') ? `The author of the book is known. They are ${bookMap.get('author')}.` : "The author is unknown.");
+// //13.5
+// //bookMap.delete('author');
+// console.log(bookMap.has('author') ? `The author of the book is known. They are ${bookMap.get('author')}.` : "The author is unknown.");
+
+//14.1
+const firstBookMap = new Map(Object.entries(books[0]));
+console.log(firstBookMap);
+
+//14.2
+for (const [key,value] of firstBookMap) {
+  if(typeof value === 'number') console.log(key);
+}
