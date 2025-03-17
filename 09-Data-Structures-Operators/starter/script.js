@@ -270,34 +270,51 @@ if(restaurant.openingHours.mon) console.log(restaurant.openingHours.mon.open);
 //rest.clear();
 // console.log(rest.size);
 
-const question = new Map([
-  ['question','What is the best programming language in the world?'],
-  [1,'C'],
-  [2,'Java'],
-  [3,'Python'],
-  [4,'Javascript'],
-  ['correct',4],
-  [true,'Correct!'],
-  [false,'Try again.']
-]);
-console.log(question);
+// const question = new Map([
+//   ['question','What is the best programming language in the world?'],
+//   [1,'C'],
+//   [2,'Java'],
+//   [3,'Python'],
+//   [4,'Javascript'],
+//   ['correct',4],
+//   [true,'Correct!'],
+//   [false,'Try again.']
+// ]);
+// console.log(question);
 
-//converting object(non-iterable) to map(iterable)
-console.log(Object.entries(openingHours));
-const hoursMap = new Map(Object.entries(openingHours));
-console.log(hoursMap);
+// //converting object(non-iterable) to map(iterable)
+// console.log(Object.entries(openingHours));
+// const hoursMap = new Map(Object.entries(openingHours));
+// console.log(hoursMap);
 
 //map iteration
-console.log(question.get('question')); 
-for (let [key,value] of question) {
-  if(typeof key === 'number') console.log(`Answer ${key}: ${value}`);
-}
-const answer = 4; //Number(prompt('Your answer:'));
-console.log(answer);
+// console.log(question.get('question')); 
+// for (let [key,value] of question) {
+//   if(typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+// }
+// const answer = 4; //Number(prompt('Your answer:'));
+// console.log(answer);
 
-console.log(question.get(answer == question.get('correct')));
+// console.log(question.get(answer == question.get('correct')));
 
 //convert map back to an array
-console.log([...question]);
-console.log([...question.keys()]);
-console.log([...question.values()]);
+// console.log([...question]);
+// console.log([...question.keys()]);
+// console.log([...question.values()]);
+
+console.log('a+very+nice+string'.split('+'));
+console.log('Casey Roseberry'.split(' '));
+
+let [firstName,lastName] = 'Casey Roseberry'.split(' ');
+let newName = ['Mrs.',firstName,lastName.toUpperCase()].join(' ');
+// console.log(newName);
+
+function capitalizeName(name) {
+  let names = name.split(' ');
+  let namesUpper = [];
+  for (let n of names) { 
+    namesUpper.push(n[0].toUpperCase + n.slice(1));
+  }
+  console.log(namesUpper.join(' '));
+}
+capitalizeName('jessica ann smith davis');
