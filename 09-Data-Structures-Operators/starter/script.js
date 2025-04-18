@@ -313,8 +313,25 @@ function capitalizeName(name) {
   let names = name.split(' ');
   let namesUpper = [];
   for (let n of names) { 
-    namesUpper.push(n[0].toUpperCase + n.slice(1));
+    // namesUpper.push(n[0].toUpperCase() + n.slice(1));
+    namesUpper.push(n.replace(n[0],n[0].toUpperCase()));
   }
   console.log(namesUpper.join(' '));
 }
 capitalizeName('jessica ann smith davis');
+
+//Padding
+let message = 'Go to gate 23!';
+// console.log(message.padStart(25,'+'));
+// console.log('Jonas'.padEnd(25,'+'));
+
+function maskCreditCard(number) {
+  let str = number + ''; //another way of String(number) by implicit conversion. 
+  return str.slice(-4).padStart(str.length,'*');
+}
+console.log(maskCreditCard(4444123456789900));
+
+//Repeat 
+let message2 = 'Bad Weather... All departured delayed...'
+console.log(message2.repeat(5));
+

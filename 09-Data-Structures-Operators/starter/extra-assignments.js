@@ -397,10 +397,90 @@ const books = [
 // console.log(bookMap.has('author') ? `The author of the book is known. They are ${bookMap.get('author')}.` : "The author is unknown.");
 
 //14.1
-const firstBookMap = new Map(Object.entries(books[0]));
-console.log(firstBookMap);
+// const firstBookMap = new Map(Object.entries(books[0]));
+// console.log(firstBookMap);
 
 //14.2
-for (const [key,value] of firstBookMap) {
-  if(typeof value === 'number') console.log(key);
+// for (const [key,value] of firstBookMap) {
+//   if(typeof value === 'number') console.log(key);
+// }
+
+//15.1 
+// console.log(books[0].ISBN[6],books[0].ISBN[4],books[0].ISBN[9],books[0].ISBN[8]);
+
+//15.2 
+const quote = 'A computer once beat me at chess, but it was no match for me at kick boxing';
+// console.log(quote.indexOf('chess'));
+
+//15.3
+let searchFor = 'boxing'
+let foundAt = quote.indexOf(searchFor);
+// console.log(quote.substring(foundAt,foundAt+1+searchFor.length));
+
+//15.4
+function isContributor(inName) {
+  return String(inName).toLowerCase().includes("contributor");
+}
+// console.log(isContributor('Julie Sussman (Contributor)'));
+// console.log(isContributor('Julie Sussman'));
+
+//16.1
+function normalizeAuthorName(name) {
+  let names = String(name).toLowerCase().trim().split(' ');
+  let normalized = [];
+  for (let n of names) {
+    normalized.push(n[0].toUpperCase() + n.slice(1));
+  }
+  return normalized.join(' ');
+}
+// console.log(normalizeAuthorName('  JuliE sussMan (Contributor)'));
+
+//16.2
+let newBookTitle = books[1].title.replaceAll("Programs","Software");
+// console.log(newBookTitle);
+
+//16.3 
+function logBookTheme(bookTitle) {
+  let normalized = bookTitle.toLowerCase().trim();
+  if(normalized.indexOf("computer") == 0)
+    console.log("This book is about computers");
+  if(normalized.includes("algorithm") && normalized.includes("structures"))
+    console.log("This book is about algorithms and structures");
+  if ((normalized.endsWith('system') || normalized.endsWith('systems')) && !normalized.includes('operating')) {
+    console.log("This book is about some systems, but definitely not about operating systems.");
+  }
+}
+
+// logBookTheme("STructures and aLgoritHMs");
+// logBookTheme("Computer structures and algorithms");
+// logBookTheme("Operating Systems");
+// logBookTheme("Manufacturing System");
+
+//17.1
+// function logBookCategories(categories) { 
+//    return categories.split(";");
+// }
+// const bookCategories = 'science;computing;computer science;algorithms;business;operating systems;networking;electronics';
+// console.log(logBookCategories(bookCategories));
+
+//17.2
+function getUniqueKeywordsAsString() {
+  // //12.1 Sets
+  let allKeywords = [];
+  for (let book of books) {
+    allKeywords.push(...book.keywords);
+  }
+  let uniqueKeywords = [...new Set(allKeywords)];
+  return uniqueKeywords.join(';');
+}
+console.log(getUniqueKeywordsAsString())
+
+//17.3
+const bookChapters = [['The Basics', 14], ['Sorting', 254], ['Searching', 372], ['Graphs', 526], ['Strings', 706]];
+logBookChapters(bookChapters);
+
+function logBookChapters(chapters) {
+  for (let chapter of chapters) {
+    console.log(chapter[0].padEnd(25,'.'),chapter[1]);
+  }
 }
