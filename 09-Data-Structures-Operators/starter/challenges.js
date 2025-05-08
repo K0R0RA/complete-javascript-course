@@ -226,6 +226,7 @@ underscore_case
 Some_Variable 
   calculate_AGE
 delayed_departure
+test_this_VARIABLE
 
 SHOULD PRODUCE THIS OUTPUT (5 separate console.log outputs)
 underscoreCase      ✅
@@ -242,3 +243,22 @@ HINT 4: This challenge is difficult on purpose, so start watching the solution i
 Afterwards, test with your own test data!
 
 GOOD LUCK */
+document.body.append(document.createElement('textarea'));
+document.body.append(document.createElement('button'));
+
+document.querySelector('button').addEventListener('click', function () {
+    const text = document.querySelector('textarea').value;
+    let inText = text.split('\n');
+    for(let word of inText) {
+        let wordLC = word.trim().toLowerCase().split('_');
+        let camelCase = wordLC[0] 
+        if(wordLC.length > 1) {
+            for(properWord of wordLC) {
+                if(wordLC.indexOf(properWord) > 0)
+                    camelCase += properWord.substring(0,1).toUpperCase()+properWord.substring(1,);
+            }
+        }
+        let checks = "✅".repeat(inText.indexOf(word)+1); 
+        console.log(camelCase.padEnd(30,' ')+checks);
+    }
+});
