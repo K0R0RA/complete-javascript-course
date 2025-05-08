@@ -190,16 +190,23 @@ const gameEvents = new Map([
     [92, '🔶 Yellow card'],
   ]);
 //1. Distinct Events
-let allEvents = []; 
-for (let [key,value] of gameEvents) {
-    allEvents.push(value);
-}
-let uniqueEvents = [...new Set(allEvents)];
+let uniqueEvents = [...new Set(gameEvents.values())];
 console.log(uniqueEvents);
 
+//2. Remove Yellow Card at time 64
+gameEvents.delete(64);
+console.log(gameEvents);
 
+//3. Average of events. 
+let time = [...gameEvents.keys()].pop();
+console.log(`An event happened, on average, every ${time/gameEvents.size} minutes.`);
 
-
+for(let [key,value] of gameEvents) {
+    if (key < 45) 
+        console.log(`[First Half] ${value}`)
+     else 
+        console.log(`[Second Half] ${value}`)
+}
 
 
 ///////////////////////////////////////
