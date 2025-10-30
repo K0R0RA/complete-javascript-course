@@ -236,6 +236,77 @@
 // const addTaxRate = rate => value => value + value * (rate / 100);
 // const addVAT2 = addTaxRate(23);
 // console.log(addVAT2(100));
+
+//=========================================
+// Video 143 Immediately Invoked Functions
+//=========================================
+// const runOnce = function () {
+//   console.log('This can be called repeatedly');
+// };
+// runOnce();
+// runOnce();
+
+// //IIFE (pronounced iffy)
+// //Trick javascript into parsing as an expression by wrapping in ()
+// (function () {
+//   console.log('This will really only run once');
+// })(); //followed by (); to immediately call it
+
+// //The same works for arrow functions
+// (() => console.log('IIFE Arrow Function'))();
+
+//====================
+// Video 144 Closures
+//====================
+//Closures are not created manually and happens automatically in certain situations.
+function secureBooking() {
+  let passengerCount = 0;
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+}
+
+//booker exists in the global scope
+//but it has access to the memory of the secureBooking function when it was created
+let booker = secureBooking();
+booker();
+booker();
+booker();
+//How can it update the passengerCount from secureBooking?
+//Because passengerCount was moved to the heap memory because of a closure.
+
+//Variable environment(VE) that popped off the stack after secureBooking()
+//   passengerCount=0
+//Because of closure, VE was moved to heap and NOT garbage collected after execution.
+//A function always has access to the VE of the exectuion context (EC) in which
+//  it was created, even after that EC is gone.
+//Closure: VE attached to the function, exactly as it was at the time and place
+//  the function was created.
+//  OR
+//  The closed-over variable environment of the exectuion context in which a function
+//    was created, even after that execution context is gone.
+//  A closure gives a function access to all the variable of its parent function, even
+//    after that parent function has returned. The function keeps a reference to its
+//    outer scope, which preserves the scope chain through time.
+//  A closure makes sure that a function doesn't loose connection to variables that
+//    existed at the functions birthplace. (like a person attached to their hometowm)
+//  A close is like a backpack that a function carries around wherever it goes. This
+//    backpack has all the variables that were present in the environment where the
+//    function was created.
+//We do NOT have to create closures manually, this is a JS feature that happens
+//  automatically. We can't even access closed-over variables explicitly. A closure
+//  is NOT a tangible JS object.
+
+//The closure backpack can be viewed in the debugger console by using dir() and
+//  checking out the [[Scopes]] internal variable.
+// Double Brackets [[internalProperty]] is an internal property that cannot be accessed
+console.dir(booker);
+
+//=================================
+// Video 145 More Closure Examples
+//=================================
+
 //============= Challenges ========================================================================
 /* 
 Let's build a simple poll app!
@@ -271,45 +342,45 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 
 GOOD LUCK 😀
 */
-const poll = {
-  questions: ['0: Python', '1: Rust', '2: C#', '3: Java'],
-  answers: [0, 0, 0, 0],
-  registerNewAnswer() {
-    console.log(this);
-    console.log(this.answers);
-    console.log(this.questions);
-    let answer = Number.parseInt(
-      prompt(
-        'What is your favourite programming language?\n' +
-          this.questions.join('\n')
-      )
-    );
-    if (
-      Number.isInteger(answer) &&
-      answer >= 0 &&
-      answer < this.answers.length
-    ) {
-      this.answers[answer] += 1;
-      this.displayResults();
-    } else {
-      alert('Please enter a valid option, 0-4.');
-      registerNewAnswer();
-    }
-  },
-  displayResults(type = 'array') {
-    if (type === 'string') {
-      document.querySelector(
-        'h1'
-      ).innerHTML = `Poll results are ${this.answers.join(', ')}`;
-    } else if (type === 'array') {
-      document.querySelector('h1').innerHTML = this.answers;
-    }
-  },
-};
+// const poll = {
+//   questions: ['0: Python', '1: Rust', '2: C#', '3: Java'],
+//   answers: [0, 0, 0, 0],
+//   registerNewAnswer() {
+//     console.log(this);
+//     console.log(this.answers);
+//     console.log(this.questions);
+//     let answer = Number.parseInt(
+//       prompt(
+//         'What is your favourite programming language?\n' +
+//           this.questions.join('\n')
+//       )
+//     );
+//     if (
+//       Number.isInteger(answer) &&
+//       answer >= 0 &&
+//       answer < this.answers.length
+//     ) {
+//       this.answers[answer] += 1;
+//       this.displayResults();
+//     } else {
+//       alert('Please enter a valid option, 0-4.');
+//       registerNewAnswer();
+//     }
+//   },
+//   displayResults(type = 'array') {
+//     if (type === 'string') {
+//       document.querySelector(
+//         'h1'
+//       ).innerHTML = `Poll results are ${this.answers.join(', ')}`;
+//     } else if (type === 'array') {
+//       document.querySelector('h1').innerHTML = this.answers;
+//     }
+//   },
+// };
 
-document
-  .querySelector('.poll')
-  .addEventListener('click', poll.registerNewAnswer.bind(poll));
+// document
+//   .querySelector('.poll')
+//   .addEventListener('click', poll.registerNewAnswer.bind(poll));
 
-//poll.displayResults.call({ answers: [5, 2, 3] },'string');
-poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, 'string');
+// //poll.displayResults.call({ answers: [5, 2, 3] },'string');
+// poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, 'string');
