@@ -259,20 +259,20 @@
 // Video 144 Closures
 //====================
 //Closures are not created manually and happens automatically in certain situations.
-function secureBooking() {
-  let passengerCount = 0;
-  return function () {
-    passengerCount++;
-    console.log(`${passengerCount} passengers`);
-  };
-}
+// function secureBooking() {
+//   let passengerCount = 0;
+//   return function () {
+//     passengerCount++;
+//     console.log(`${passengerCount} passengers`);
+//   };
+// }
 
 //booker exists in the global scope
 //but it has access to the memory of the secureBooking function when it was created
-let booker = secureBooking();
-booker();
-booker();
-booker();
+// let booker = secureBooking();
+// booker();
+// booker();
+// booker();
 //How can it update the passengerCount from secureBooking?
 //Because passengerCount was moved to the heap memory because of a closure.
 
@@ -301,11 +301,41 @@ booker();
 //The closure backpack can be viewed in the debugger console by using dir() and
 //  checking out the [[Scopes]] internal variable.
 // Double Brackets [[internalProperty]] is an internal property that cannot be accessed
-console.dir(booker);
+// console.dir(booker);
 
 //=================================
 // Video 145 More Closure Examples
 //=================================
+// let f;
+// function g() {
+//   const a = 23;
+//   f = function () {
+//     console.log(a * 2);
+//   };
+// }
+// function h() {
+//   const b = 777;
+//   f = function () {
+//     console.log(b * 2);
+//   };
+// }
+
+// g();
+// f(); //f() closed over the VE of the g() function
+// h();
+// f(); //f()) reassigned in h(), closed over the VE of h() now.
+// console.dir(f);
+
+// function boardPassengers(n, wait) {
+//   const perGroup = n / 3;
+//   setTimeout(function () {
+//     console.log(`We are now boarding all ${n} passengers.`);
+//     console.log(`There are 3 groups, each with ${perGroup} passengers.`);
+//   }, 1000 * wait);
+//   console.log(`Will start boarding in ${wait} seconds.`);
+// }
+// const perGroup = 1000;
+// boardPassengers(180, 3);
 
 //============= Challenges ========================================================================
 /* 
@@ -384,3 +414,33 @@ GOOD LUCK 😀
 
 // //poll.displayResults.call({ answers: [5, 2, 3] },'string');
 // poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, 'string');
+
+//=====================
+// Coding Challenge #2
+//=====================
+/* 
+This is more of a thinking challenge than a coding challenge 🤓
+
+Take the IIFE below and at the end of the function, 
+attach an event listener that changes the color of the selected 
+h1 element ('header') to blue, each time the BODY element is clicked. 
+Do NOT select the h1 element again!
+
+And now explain to YOURSELF (or someone around you) WHY this worked! 
+Take all the time you need. Think about WHEN exactly the callback 
+function is executed, and what that means for the variables 
+involved in this example.
+
+GOOD LUCK 😀
+*/
+
+function goBlue() {
+  const header = document.querySelector('h1');
+  header.style.color = 'blue';
+
+  setTimeout(function () {
+    header.style.color = 'red';
+  }, 3000);
+}
+
+document.querySelector('body').addEventListener('click', goBlue);
