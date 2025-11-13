@@ -38,6 +38,7 @@ const account4 = {
 };
 
 const accounts = [account1, account2, account3, account4];
+let currentAccount = '';
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -76,57 +77,88 @@ function createUsername(username) {
     .join('');
 }
 
-function calcTotals(account) {
-  account.balance = account.movements.reduce((acc, value) => acc + value, 0);
-  account.withdrawals = account.movements
+function calcTotals() {
+  currentAccount.balance = currentAccount.movements.reduce(
+    (acc, value) => acc + value,
+    0
+  );
+  currentAccount.withdrawals = currentAccount.movements
     .filter(value => value < 0)
     .reduce((sum, value) => sum + value, 0);
-  account.deposits = account.movements
+  currentAccount.deposits = currentAccount.movements
     .filter(value => value > 0)
     .reduce((sum, value) => sum + value, 0);
-  account.interest = (account.balance * (account.interestRate / 100)).toFixed(
-    2
-  );
-  console.log(account);
+  currentAccount.interest = (
+    currentAccount.balance *
+    (currentAccount.interestRate / 100)
+  ).toFixed(2);
+  console.log(currentAccount);
 }
 
-function displayMovements(account) {
+function displayMovements() {
   containerMovements.innerHTML = '';
-  account.movements.forEach(function (val, i) {
+  currentAccount.movements.forEach(function (val, i) {
     let type = val > 0 ? 'deposit' : 'withdrawal';
     let html = ` 
       <div class="movements__row">
           <div class="movements__type movements__type--${type}">${
       i + 1
     }: ${type} </div>
-          <div class="movements__value">${val} ${account.currency}</div>
+          <div class="movements__value">${val} ${currentAccount.currency}</div>
       </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 }
 
-function displayStats(account) {
-  labelBalance.textContent = `${account.balance} ${account.currency}`;
-  labelSumIn.textContent = `${account.deposits} ${account.currency}`;
-  labelSumOut.textContent = `${account.withdrawals} ${account.currency}`;
-  labelSumInterest.textContent = `${account.interest} ${account.currency}`;
+function displayStats() {
+  labelBalance.textContent = `${currentAccount.balance} ${currentAccount.currency}`;
+  labelSumIn.textContent = `${currentAccount.deposits} ${currentAccount.currency}`;
+  labelSumOut.textContent = `${currentAccount.withdrawals} ${currentAccount.currency}`;
+  labelSumInterest.textContent = `${currentAccount.interest} ${currentAccount.currency}`;
 }
 
-function updateDisplay(account) {
-  containerApp.setAttribute('style', 'opacity: 1;');
-  labelWelcome.textContent = `Welcome back, ${account.owner.split(' ')[0]}.`;
-  calcTotals(account);
-  displayMovements(account);
-  displayStats(account);
+function updateDisplay() {
+  if (currentAccount != '') {
+    containerApp.setAttribute('style', 'opacity: 1;');
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }.`;
+    //clear input fields and lose focus
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputTransferAmount.value = inputTransferTo.value = '';
+    inputCloseUsername.value = '';
+    inputClosePin.value = '';
+    document.activeElement.blur();
+    calcTotals();
+    displayMovements();
+    displayStats();
+  } else {
+    containerApp.setAttribute('style', 'opacity: 0;');
+    labelWelcome.textContent = 'Log in to get started';
+  }
 }
 
 function checkLogin(username, pin) {
   let account = accounts.find(
     acc => acc.username === username.toLowerCase() && acc.pin.toString() === pin
   );
-  account ? updateDisplay(account) : alert('Invalid Login');
+  if (account) {
+    currentAccount = account;
+    updateDisplay();
+  } else alert('Invalid Login');
 }
-
+function transferMoney(target, amount) {
+  console.log(`Target: ${target}, Amount: ${amount}`);
+  let targetAcct = isValidAccountByUsername(target);
+  if (targetAcct) {
+    targetAcct.movements.push(amount);
+    currentAccount.movements.push(amount * -1);
+    updateDisplay();
+  }
+}
+function isValidAccountByUsername(account) {
+  return accounts.find(acc => acc.username === account.toLowerCase());
+}
 //Update Accounts
 
 //display the value
@@ -144,6 +176,40 @@ btnLogin.addEventListener('click', e => {
   let username = inputLoginUsername.value;
   let pin = inputLoginPin.value;
   checkLogin(username, pin);
+});
+
+btnTransfer.addEventListener('click', e => {
+  e.preventDefault();
+  let transferTo = inputTransferTo.value;
+  let transferAmount = Number(inputTransferAmount.value);
+  let validTransferTo = isValidAccountByUsername(transferTo);
+  if (
+    validTransferTo &&
+    validTransferTo != currentAccount.username &&
+    transferAmount <= currentAccount.balance &&
+    transferAmount > 0
+  ) {
+    transferMoney(transferTo, transferAmount);
+  } else alert('That is not a valid transfer account.');
+});
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+  let closeUser = inputCloseUsername.value;
+  let closePin = Number(inputClosePin.value);
+  if (
+    closeUser === currentAccount.username &&
+    closePin === currentAccount.pin
+  ) {
+    accounts.splice(
+      accounts.findIndex(acc => acc.username === currentAccount.username),
+      1
+    );
+    currentAccount = '';
+    updateDisplay();
+  } else {
+    alert('Invalid login credentials.');
+  }
 });
 
 /////////////////////////////////////////////////
