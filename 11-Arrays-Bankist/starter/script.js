@@ -75,6 +75,7 @@ function createUsername(username) {
     .map(value => value[0])
     .join('');
 }
+
 function calcTotals(account) {
   account.balance = account.movements.reduce((acc, value) => acc + value, 0);
   account.withdrawals = account.movements
@@ -103,7 +104,7 @@ function displayMovements(account) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 }
-function displayBalance(account) {}
+
 function displayStats(account) {
   labelBalance.textContent = `${account.balance} ${account.currency}`;
   labelSumIn.textContent = `${account.deposits} ${account.currency}`;
@@ -112,20 +113,38 @@ function displayStats(account) {
 }
 
 function updateDisplay(account) {
+  containerApp.setAttribute('style', 'opacity: 1;');
+  labelWelcome.textContent = `Welcome back, ${account.owner.split(' ')[0]}.`;
   calcTotals(account);
   displayMovements(account);
   displayStats(account);
 }
 
+function checkLogin(username, pin) {
+  let account = accounts.find(
+    acc => acc.username === username.toLowerCase() && acc.pin.toString() === pin
+  );
+  account ? updateDisplay(account) : alert('Invalid Login');
+}
+
 //Update Accounts
-accounts.forEach(value => {
-  value.username = createUsername(value.owner);
-});
 
 //display the value
 
 //Update the display
-updateDisplay(account2);
+//updateDisplay(account2);
+
+//Event Handlers
+accounts.forEach(value => {
+  value.username = createUsername(value.owner);
+});
+
+btnLogin.addEventListener('click', e => {
+  e.preventDefault(); //prevent form from submitting & reloading the page (submit button default behavior)
+  let username = inputLoginUsername.value;
+  let pin = inputLoginPin.value;
+  checkLogin(username, pin);
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -304,7 +323,24 @@ updateDisplay(account2);
 //   (acc, value) => (value > acc ? value : acc),
 //   movements[0]
 // );
-// console.log(maxValue);
+// console.log(maxValue);\
+
+//===========================
+// Video 164 The find Method
+//===========================
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// //Loops over the array and retrieves the 1st element of the array that satisfies
+// // the callback function's condition. find() only returns a single value, not an array.
+// // callback function must return a boolean like filter()
+// let firstWithdrawal = movements.find(value => value < 0);
+// console.log(firstWithdrawal);
+
+// console.log(accounts);
+
+// //Very powerful for searching large array structure of objects with properties
+// let account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Challenges
