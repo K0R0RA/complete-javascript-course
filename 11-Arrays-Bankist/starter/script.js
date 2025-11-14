@@ -128,6 +128,7 @@ function updateDisplay() {
     inputTransferAmount.value = inputTransferTo.value = '';
     inputCloseUsername.value = '';
     inputClosePin.value = '';
+    inputLoanAmount.value = '';
     document.activeElement.blur();
     calcTotals();
     displayMovements();
@@ -209,6 +210,26 @@ btnClose.addEventListener('click', e => {
     updateDisplay();
   } else {
     alert('Invalid login credentials.');
+  }
+});
+
+//only grant a loan if there is at least a deposit > 10% of the loan requested
+//introduced bug where you can keep granting yourself exponentially bigger loans.
+btnLoan.addEventListener('click', e => {
+  e.preventDefault();
+  let requestAmount = Number(inputLoanAmount.value);
+  if (requestAmount > 0) {
+    if (currentAccount.movements.some(value => value >= requestAmount * 0.1)) {
+      alert('Loan successfully granted.');
+      currentAccount.movements.push(requestAmount);
+      updateDisplay();
+    } else {
+      alert(
+        'There is not a deposit greater than 10% of the loan amount requested.'
+      );
+    }
+  } else {
+    alert('Loan request must be greater than 0.');
   }
 });
 
@@ -408,6 +429,52 @@ btnClose.addEventListener('click', e => {
 // let account = accounts.find(acc => acc.owner === 'Jessica Davis');
 // console.log(account);
 
+//==================================================
+// Video 168 The findLast and findLast Index Method
+//==================================================
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+// console.log(movements.findLast(acc => acc < 0));
+
+// console.log(
+//   `Your latest large deposit of $${movements.findLast(acc => acc > 2000)} was ${
+//     movements.length - movements.findLastIndex(acc => acc > 2000)
+//   } transactions ago`
+// );
+
+//======================================
+// Video 169 The some and every Methods
+//======================================
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+
+// let deposit = value => value > 0;
+
+// //includes() tests for exact equality
+// console.log(movements.includes(-400));
+
+// //some() tests on boolean condition
+// console.log(movements.some(deposit));
+
+// //every() tests if every element passes boolean condition
+// console.log(movements.every(deposit));
+// console.log(account4.movements.every(deposit));
+
+//========================================
+// Video 170 The flat and flatMap Methods
+//========================================
+// let arr = [[1, 2, 3], [4, 5, [0, 0, 0]], 7, 8];
+// //flat(): flattens a nested array up to to N?=1 depth
+// console.log(arr.flat());
+// console.log(arr.flat(2));
+// //console.log(arr.flatMap);
+
+// let allBankTransactions = accounts.flatMap(account => account.movements);
+// console.log(allBankTransactions);
+// //flatMap only goes to depth N=1.
+
+// let bankTotal = allBankTransactions.reduce((sum, value) => sum + value, 0);
+// console.log(bankTotal);
 ///////////////////////////////////////////////////////////////////////////////
 // Challenges
 ///////////////////////////////////////////////////////////////////////////////
@@ -495,3 +562,101 @@ Create a function 'calcAverageHumanAge', which accepts an arrays of dog's
 
 // console.log(testData2);
 // console.log(Math.round(calcAverageHumanAge(testData2)));
+
+//=====================
+// Coding Challenge #4
+//=====================
+/*
+This time, Julia and Kate are studying the activity levels of different dog breeds.
+
+YOUR TASKS:
+1. Store the the average weight of a "Husky" in a variable "huskyWeight"
+2. Find the name of the only breed that likes both "running" and "fetch" ("dogBothActivities" variable)
+3. Create an array "allActivities" of all the activities of all the dog breeds
+4. Create an array "uniqueActivities" that contains only the unique activities (no activity repetitions). HINT: Use a technique with a special data structure that we studied a few sections ago.
+5. Many dog breeds like to swim. What other activities do these dogs like? Store all the OTHER activities these breeds like to do, in a unique array called "swimmingAdjacent".
+6. Do all the breeds have an average weight of 10kg or more? Log to the console whether "true" or "false".
+7. Are there any breeds that are "active"? "Active" means that the dog has 3 or more activities. Log to the console whether "true" or "false".
+
+BONUS: What's the average weight of the heaviest breed that likes to fetch? HINT: Use the "Math.max" method along with the ... operator.
+
+TEST DATA:
+*/
+// const breeds = [
+//   {
+//     breed: 'German Shepherd',
+//     averageWeight: 32,
+//     activities: ['fetch', 'swimming'],
+//   },
+//   {
+//     breed: 'Dalmatian',
+//     averageWeight: 24,
+//     activities: ['running', 'fetch', 'agility'],
+//   },
+//   {
+//     breed: 'Labrador',
+//     averageWeight: 28,
+//     activities: ['swimming', 'fetch'],
+//   },
+//   {
+//     breed: 'Beagle',
+//     averageWeight: 12,
+//     activities: ['digging', 'fetch'],
+//   },
+//   {
+//     breed: 'Husky',
+//     averageWeight: 26,
+//     activities: ['running', 'agility', 'swimming'],
+//   },
+//   {
+//     breed: 'Bulldog',
+//     averageWeight: 36,
+//     activities: ['sleeping'],
+//   },
+//   {
+//     breed: 'Poodle',
+//     averageWeight: 18,
+//     activities: ['agility', 'fetch'],
+//   },
+// ];
+
+// //1. Average weight of a husky
+// let huskyWeight = breeds.find(dog => dog.breed === 'Husky').averageWeight;
+// console.log(huskyWeight);
+// //2. Dog that likes both "running" and "fetch" ("dogBothActivities" variable)
+// let dogBothActivities = breeds.find(
+//   dog => dog.activities.includes('fetch') && dog.activities.includes('running')
+// ).breed;
+// console.log(dogBothActivities);
+// //3. Create array "allActivities" of all the activities of all the dog breeds
+// let allActivities = breeds.flatMap(dog => dog.activities);
+// console.log(allActivities);
+// //4. Unique allActivies
+// let uniqueActivities = [...new Set(allActivities)];
+// console.log(uniqueActivities);
+// //5. Many dog breeds like to swim. What other activities do these dogs like?
+// //Store all the OTHER activities these breeds like to do, in a unique array called
+// // "swimmingAdjacent".
+// let swimmingAdjacent = [
+//   ...new Set(
+//     breeds
+//       .filter(dog => dog.activities.includes('swimming'))
+//       .flatMap(dog => dog.activities.filter(act => act != 'swimming'))
+//   ),
+// ];
+// console.log(swimmingAdjacent);
+
+// //6. Do all breeds weight 10k or more?
+// console.log(breeds.every(dog => dog.averageWeight > 10));
+
+// //7. Are there any breeds that are "active"? "Active" means that the dog
+// // has 3 or more activities.
+// // Log to the console whether "true" or "false".
+// console.log(breeds.some(dog => dog.activities.length >= 3));
+
+// //bonus Average Weight of the heaviest breed that likes to fetch
+// let heaviest = breeds
+//   .filter(dog => dog.activities.includes('fetch'))
+//   .map(dog => dog.averageWeight)
+//   .reduce((max, curr) => (curr > max ? curr : max));
+// console.log(heaviest);
