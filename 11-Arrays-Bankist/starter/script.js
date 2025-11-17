@@ -11,6 +11,7 @@ const account1 = {
   interestRate: 1.2, // %
   pin: 1111,
   currency: '€',
+  type: 'premium',
 };
 
 const account2 = {
@@ -19,14 +20,17 @@ const account2 = {
   interestRate: 1.5,
   pin: 2222,
   currency: '$',
+  type: 'basic',
 };
 
 const account3 = {
   owner: 'Steven Thomas Williams',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  //movements: [],
   interestRate: 0.7,
   pin: 3333,
   currency: '$',
+  type: 'standard',
 };
 
 const account4 = {
@@ -35,6 +39,7 @@ const account4 = {
   interestRate: 1,
   pin: 4444,
   currency: 'CAD',
+  type: 'standard',
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -112,7 +117,6 @@ function displayMovements() {
       </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
-  console.log(currentAccount.movements);
 }
 
 function displayStats() {
@@ -517,6 +521,189 @@ btnSort.addEventListener('click', e => {
 // movements.sort((a, b) => b - a);
 // console.log(movements);
 
+//===========================
+// Video 173: Array Grouping
+//===========================
+// //groups values in an array based on a condition
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+// let groupedMovements = Object.groupBy(movements, value =>
+//   value > 0 ? 'deposits' : 'withdrawals'
+// );
+// console.log(groupedMovements);
+// console.log(groupedMovements.deposits);
+// console.log(groupedMovements.withdrawals);
+
+// let groupedByActivitiy = Object.groupBy(accounts, account => {
+//   let movementCount = account.movements.length;
+//   if (movementCount >= 8) return 'extremely active';
+//   else if (movementCount >= 4) return 'very active';
+//   else if (movementCount >= 1) return 'active';
+//   else return 'inactive';
+// });
+// console.log(groupedByActivitiy);
+
+// let groupedAccounts = Object.groupBy(accounts, ({ type }) => type);
+// //({ type }) is the destructuring of account.type
+// //same as
+// //let groupedAccounts = Object.groupBy(accounts, account => account.type)
+// console.log(groupedAccounts);
+
+//=====================================================
+// Video 174: More Ways of Creating and Filling Arrays
+//=====================================================
+// let arr = [1, 2, 3, 4, 5];
+// console.log(new Array(1, 2, 3, 4, 5, 6));
+
+// // Create an empty array of 7 length, not a x = [7]
+// let x = new Array(7);
+// console.log(x);
+// console.log(x.map(() => 5));
+
+// // .fill() fills an array with a specified value
+// x.fill(1, 3, 5);
+// console.log(x);
+// arr.fill(10, 2, 4); //include index 2, up to but not including index 4
+// console.log(arr);
+
+// // .from() constructs an array using a cb function to determine
+// let arr2 = Array.from({ length: 7 }, (_, i) => i + 1);
+// console.log(arr2);
+
+// let diceRolls = Array.from({ length: 100 }, () => Math.ceil(Math.random() * 6));
+// console.log(diceRolls);
+// let diceResults = Object.groupBy(diceRolls, roll => roll);
+// console.log(diceResults);
+
+//Let's get movements from the UI, not the object by the node list
+// labelBalance.addEventListener('click', e => {
+//   let movementsUI = Array.from(
+//     document.querySelectorAll('.movements__value')
+//   ).map(val => Number(val.textContent.replace(/\s\D+/gim, '')));
+//   console.log(movementsUI);
+
+//   let movementsUI2 = [...document.querySelectorAll('.movements__value')];
+//   let val2 = movementsUI2.map(val =>
+//     Number(val.textContent.replace(/\s\D+/gim, ''))
+//   );
+//   console.log(val2);
+// });
+
+//===============================================================================
+// Video 175: Non-destructive Alternatives: toReverse, toSorted, toSpliced, with
+//===============================================================================
+// //non-destructive means it does not mutate the original array
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+// // movements.reverse(); //destructive
+// // console.log(movements);
+
+// // .toReversed()
+// //can manually achieve this with .slice().reverse()
+// console.log(movements.toReversed());
+// console.log(movements);
+
+// // destructive value changes
+// //movements[1] = 2000;
+// console.log(movements);
+// // non-destructive
+// let newMovements = movements.with(1, 2000);
+// console.log(newMovements);
+// console.log(movements);
+
+//===========================================
+// Video 176: When to use which array method
+//===========================================
+/*
++++++++++++++++++++
+  Array.Methods()
++++++++++++++++++++
+To mutate original? (should be avoided)
+  add to original?
+    .push (end) 
+    .unshift (beginning)
+  remove from original?
+    .pop (end)
+    .shift (start)
+    .splice (any)
+  other?
+    .reverse
+    .sort
+    .fill
+-------------------------------------------
+A new Array() based on the original?
+  same length as original?
+    .map (loop) 
+  filtered using condition? 
+    .filter
+  taking a portion of the original?
+    .slice
+  with one item replaced? 
+    .with
+  flattened?
+    .flat
+    .flatMap
+  reversed?
+    toReveresed
+  sorted? 
+    toSorted
+  with deleted items?
+    toSpliced
+  joining 2 arrays? 
+    .concat
+-------------------------------------------
+An array index?
+  based on value? 
+    .indexOf
+  based on test condition? 
+    .findIndex
+    .findLastIndex
+-------------------------------------------
+An array element? 
+  based on test condition?
+    .find
+    .findLast
+  based on position?
+    .at
+-------------------------------------------
+Know if an array includes?
+  based on value?
+    .includes
+  based on test condition?
+    .some (or)
+    .every (and)
+-------------------------------------------
+To a new string?
+  based on a separator?
+    .join
+-------------------------------------------
+To Transform a value?
+  based on accumulator?
+    .reduce 
+      //single value of any type: number, string, boolean, or 
+      //even new Array or Object
+-------------------------------------------
+To just loop array? 
+  based on callback
+    .forEach (does not create new array or value (void), just loops over it)
+
++++++++++++++++
+  Array Tools
++++++++++++++++
+Grouping an array by categories
+  Object.groupBy
+Creating a new array from scratch
+  Array.from({length:n},(_,i)=>i))
+Creating a new array from scratch with n empty positions (use with .fill)
+  new Array(n)
+Joining 2 or more arrays (spread operator)
+  [...arr1,...arr2]
+Creating a new array containing distinct values of arr
+  [...new Set(arr)]
+Creating a new array containing distinct values of both arr1 and arr2
+  [...new Set(arr1).intersection(new Set(arr2))]
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Challenges
 ///////////////////////////////////////////////////////////////////////////////
@@ -702,3 +889,125 @@ TEST DATA:
 //   .map(dog => dog.averageWeight)
 //   .reduce((max, curr) => (curr > max ? curr : max));
 // console.log(heaviest);
+
+//=====================
+// Coding Challenge #5
+//=====================
+/* 
+Julia and Kate are still studying dogs. This time they are wanting to figure out 
+if the dogs in their care are eating too much or too little food.
+
+- Formula for calculating recommended food portion: 
+recommendedFood = weight ** 0.75 * 28. 
+(The result is in grams of food, and the weight needs to be in kg)
+- Eating too much means the dog's current food portion is larger than the
+    recommended portion, and eating too little is the opposite.
+- Eating an okay amount means the dog's current food portion is within
+    a range 10% above and below the recommended portion (see hint).
+
+YOUR TASKS:
+1. Loop over the array containing dog objects, and for each dog, calculate the 
+  recommended food portion (recFood) and add it to the object as a new property. 
+  Do NOT create a new array, simply loop over the array (We never did this 
+  before, so think about how you can do this without creating a new array).
+2. Find Sarah's dog and log to the console whether it's eating too much or too 
+  little. HINT: Some dogs have multiple users, so you first need to find Sarah
+  in the owners array, and so this one is a bit tricky (on purpose) 🤓
+3. Create an array containing all owners of dogs who eat too much (ownersTooMuch) 
+  and an array with all owners of dogs who eat too little (ownersTooLittle).
+4. Log a string to the console for each array created in 3., like this: 
+  "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and 
+  Michael's dogs eat too little!"
+5. Log to the console whether there is ANY dog eating EXACTLY the amount of food
+  that is recommended (just true or false)
+6. Log to the console whether ALL of the dogs are eating an OKAY amount of food 
+  (just true or false)
+7. Create an array containing the dogs that are eating an OKAY amount of food 
+  (try to reuse the condition used in 6.)
+8. Group the dogs into the following 3 groups: 'exact', 'too-much' and 'too-little',
+  based on whether they are eating too much, too little or the exact amount of food,
+  based on the recommended food portion.
+9. Group the dogs by the number of owners they have
+10. Sort the dogs array by recommended food portion in an ascending order. 
+  Make sure to NOT mutate the original array!
+
+HINT 1: Use many different tools to solve these challenges, you can use the summary
+  lecture to choose between them 😉
+HINT 2: Being within a range 10% above and below the recommended portion means: 
+  current > (recommended * 0.90) && current < (recommended * 1.10). 
+  Basically, the current portion should be between 90% and 110% of the 
+  recommended portion.
+
+TEST DATA:
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John', 'Leo'] },
+  { weight: 18, curFood: 244, owners: ['Joe'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+GOOD LUCK 😀
+*/
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John', 'Leo'] },
+  { weight: 18, curFood: 244, owners: ['Joe'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+//1 Caclulate recommended food and add to dogs objects.
+dogs.map(dog => {
+  dog.recFood = Math.round(dog.weight ** 0.75 * 28);
+});
+console.log(dogs);
+
+//2 Sarah's dog eating too much or too little?
+let sarahDog = dogs.find(({ owners }) => owners.includes('Sarah'));
+console.log(sarahDog);
+console.log(
+  sarahDog.curFood > sarahDog.recFood ? 'Too much food' : 'Not too much food'
+);
+
+//3 Owners of too much and too little
+dogs.map(dog => {
+  //current > (recommended * 0.90) && current < (recommended * 1.10)
+  if (dog.curFood > dog.recFood) dog.amount = 'overfed';
+  else if (dog.curFood > dog.recFood * 0.9 && dog.curFood < dog.recFood * 1.1)
+    dog.amount = 'fed';
+  else dog.amount = 'underfed';
+});
+console.log(dogs);
+let ownersTooMuch = dogs
+  .filter(dog => dog.amount == 'overfed')
+  .flatMap(dog => dog.owners);
+let ownersTooLittle = dogs
+  .filter(dog => dog.amount == 'underfed')
+  .flatMap(dog => dog.owners);
+console.log(ownersTooMuch);
+console.log(ownersTooLittle);
+
+//4 Make 3s output nice
+console.log(`${ownersTooMuch.join(' and ')}'s dogs eat too much.`);
+console.log(`${ownersTooLittle.join(' and ')}'s dogs eat too little.`);
+
+//5 Any dog eating good?
+console.log(dogs.some(({ amount }) => amount == 'fed')); //true
+
+//6 All dogs eating good?
+console.log(dogs.every(({ amount }) => amount == 'fed')); //false
+
+//7 and 8 Grouping dogs by fed amount
+let groupedDogs = Object.groupBy(dogs, ({ amount }) => amount);
+console.log(groupedDogs);
+let goodDogs = groupedDogs['fed'];
+console.log(goodDogs);
+
+//9 Group dogs by owner amount
+let groupedByOwner = Object.groupBy(dogs, ({ owners }) => owners.length);
+console.log(groupedByOwner);
+
+//10 sort by recommended food portion asc
+let sortedDogs = dogs.toSorted((a, b) => a.recFood - b.recFood);
+console.log(sortedDogs);
