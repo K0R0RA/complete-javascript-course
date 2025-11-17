@@ -39,6 +39,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 let currentAccount = '';
+let sorted = false;
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -97,7 +98,10 @@ function calcTotals() {
 
 function displayMovements() {
   containerMovements.innerHTML = '';
-  currentAccount.movements.forEach(function (val, i) {
+  let movs = sorted
+    ? currentAccount.movements.slice().sort((a, b) => a - b)
+    : currentAccount.movements;
+  movs.forEach(function (val, i) {
     let type = val > 0 ? 'deposit' : 'withdrawal';
     let html = ` 
       <div class="movements__row">
@@ -108,6 +112,7 @@ function displayMovements() {
       </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
+  console.log(currentAccount.movements);
 }
 
 function displayStats() {
@@ -231,6 +236,12 @@ btnLoan.addEventListener('click', e => {
   } else {
     alert('Loan request must be greater than 0.');
   }
+});
+
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
+  sorted = !sorted;
+  updateDisplay();
 });
 
 /////////////////////////////////////////////////
@@ -475,6 +486,37 @@ btnLoan.addEventListener('click', e => {
 
 // let bankTotal = allBankTransactions.reduce((sum, value) => sum + value, 0);
 // console.log(bankTotal);
+
+//===========================
+// Video 172: Sorting Arrays
+//===========================
+// sort() mutates original array, converts everything (nums) to string, then sorts A-Z
+// let names = ['Casey', 'Derek', 'Zach', 'Adam'];
+// console.log(names);
+// console.log(`sort() ed: {names.sort()}`);
+
+// let movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+// console.log(`sort() ed 'numbers': ${movements.sort()}`);
+
+// //sort() can take a cb function to control sorting
+// //Ascending Sort
+// // movements.sort((a, b) => {
+// //   if (a > b) return 1;
+// //   if (a < b) return -1;
+// // });
+// //which can be simplified to
+// movements.sort((a, b) => a - b);
+// console.log(movements);
+
+// //Descending Sort
+// // movements.sort((a, b) => {
+// //   if (a < b) return 1;
+// //   if (a > b) return -1;
+// // });
+// movements.sort((a, b) => b - a);
+// console.log(movements);
+
 ///////////////////////////////////////////////////////////////////////////////
 // Challenges
 ///////////////////////////////////////////////////////////////////////////////
