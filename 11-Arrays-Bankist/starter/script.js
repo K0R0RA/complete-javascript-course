@@ -949,65 +949,65 @@ const dogs = [
 
 GOOD LUCK 😀
 */
-const dogs = [
-  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
-  { weight: 8, curFood: 200, owners: ['Matilda'] },
-  { weight: 13, curFood: 275, owners: ['Sarah', 'John', 'Leo'] },
-  { weight: 18, curFood: 244, owners: ['Joe'] },
-  { weight: 32, curFood: 340, owners: ['Michael'] },
-];
+// const dogs = [
+//   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+//   { weight: 8, curFood: 200, owners: ['Matilda'] },
+//   { weight: 13, curFood: 275, owners: ['Sarah', 'John', 'Leo'] },
+//   { weight: 18, curFood: 244, owners: ['Joe'] },
+//   { weight: 32, curFood: 340, owners: ['Michael'] },
+// ];
 
-//1 Caclulate recommended food and add to dogs objects.
-dogs.map(dog => {
-  dog.recFood = Math.round(dog.weight ** 0.75 * 28);
-});
-console.log(dogs);
+// //1 Caclulate recommended food and add to dogs objects.
+// dogs.map(dog => {
+//   dog.recFood = Math.round(dog.weight ** 0.75 * 28);
+// });
+// console.log(dogs);
 
-//2 Sarah's dog eating too much or too little?
-let sarahDog = dogs.find(({ owners }) => owners.includes('Sarah'));
-console.log(sarahDog);
-console.log(
-  sarahDog.curFood > sarahDog.recFood ? 'Too much food' : 'Not too much food'
-);
+// //2 Sarah's dog eating too much or too little?
+// let sarahDog = dogs.find(({ owners }) => owners.includes('Sarah'));
+// console.log(sarahDog);
+// console.log(
+//   sarahDog.curFood > sarahDog.recFood ? 'Too much food' : 'Not too much food'
+// );
 
-//3 Owners of too much and too little
-dogs.map(dog => {
-  //current > (recommended * 0.90) && current < (recommended * 1.10)
-  if (dog.curFood > dog.recFood) dog.amount = 'overfed';
-  else if (dog.curFood > dog.recFood * 0.9 && dog.curFood < dog.recFood * 1.1)
-    dog.amount = 'fed';
-  else dog.amount = 'underfed';
-});
-console.log(dogs);
-let ownersTooMuch = dogs
-  .filter(dog => dog.amount == 'overfed')
-  .flatMap(dog => dog.owners);
-let ownersTooLittle = dogs
-  .filter(dog => dog.amount == 'underfed')
-  .flatMap(dog => dog.owners);
-console.log(ownersTooMuch);
-console.log(ownersTooLittle);
+// //3 Owners of too much and too little
+// dogs.map(dog => {
+//   //current > (recommended * 0.90) && current < (recommended * 1.10)
+//   if (dog.curFood > dog.recFood) dog.amount = 'overfed';
+//   else if (dog.curFood > dog.recFood * 0.9 && dog.curFood < dog.recFood * 1.1)
+//     dog.amount = 'fed';
+//   else dog.amount = 'underfed';
+// });
+// console.log(dogs);
+// let ownersTooMuch = dogs
+//   .filter(dog => dog.amount == 'overfed')
+//   .flatMap(dog => dog.owners);
+// let ownersTooLittle = dogs
+//   .filter(dog => dog.amount == 'underfed')
+//   .flatMap(dog => dog.owners);
+// console.log(ownersTooMuch);
+// console.log(ownersTooLittle);
 
-//4 Make 3s output nice
-console.log(`${ownersTooMuch.join(' and ')}'s dogs eat too much.`);
-console.log(`${ownersTooLittle.join(' and ')}'s dogs eat too little.`);
+// //4 Make 3s output nice
+// console.log(`${ownersTooMuch.join(' and ')}'s dogs eat too much.`);
+// console.log(`${ownersTooLittle.join(' and ')}'s dogs eat too little.`);
 
-//5 Any dog eating good?
-console.log(dogs.some(({ amount }) => amount == 'fed')); //true
+// //5 Any dog eating good?
+// console.log(dogs.some(({ amount }) => amount == 'fed')); //true
 
-//6 All dogs eating good?
-console.log(dogs.every(({ amount }) => amount == 'fed')); //false
+// //6 All dogs eating good?
+// console.log(dogs.every(({ amount }) => amount == 'fed')); //false
 
-//7 and 8 Grouping dogs by fed amount
-let groupedDogs = Object.groupBy(dogs, ({ amount }) => amount);
-console.log(groupedDogs);
-let goodDogs = groupedDogs['fed'];
-console.log(goodDogs);
+// //7 and 8 Grouping dogs by fed amount
+// let groupedDogs = Object.groupBy(dogs, ({ amount }) => amount);
+// console.log(groupedDogs);
+// let goodDogs = groupedDogs['fed'];
+// console.log(goodDogs);
 
-//9 Group dogs by owner amount
-let groupedByOwner = Object.groupBy(dogs, ({ owners }) => owners.length);
-console.log(groupedByOwner);
+// //9 Group dogs by owner amount
+// let groupedByOwner = Object.groupBy(dogs, ({ owners }) => owners.length);
+// console.log(groupedByOwner);
 
-//10 sort by recommended food portion asc
-let sortedDogs = dogs.toSorted((a, b) => a.recFood - b.recFood);
-console.log(sortedDogs);
+// //10 sort by recommended food portion asc
+// let sortedDogs = dogs.toSorted((a, b) => a.recFood - b.recFood);
+// console.log(sortedDogs);

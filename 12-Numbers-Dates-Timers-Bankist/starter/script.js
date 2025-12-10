@@ -78,176 +78,331 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-/////////////////////////////////////////////////
-// Functions
+//======================
+// Bankist Working Code
+//======================
+let currentAccount = '';
+let sorted = false;
 
-const displayMovements = function (movements, sort = false) {
+function createUsername(username) {
+  return username
+    .toLowerCase()
+    .split(' ')
+    .map(value => value[0])
+    .join('');
+}
+
+function calcTotals() {
+  currentAccount.balance = currentAccount.movements.reduce(
+    (acc, value) => acc + value,
+    0
+  );
+  currentAccount.withdrawals = currentAccount.movements
+    .filter(value => value < 0)
+    .reduce((sum, value) => sum + value, 0)
+    .toFixed(2);
+  currentAccount.deposits = currentAccount.movements
+    .filter(value => value > 0)
+    .reduce((sum, value) => sum + value, 0)
+    .toFixed(2);
+  currentAccount.interest = (
+    currentAccount.balance *
+    (currentAccount.interestRate / 100)
+  ).toFixed(2);
+  console.log(currentAccount);
+}
+
+function displayMovements() {
   containerMovements.innerHTML = '';
-
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
-
-  movs.forEach(function (mov, i) {
-    const type = mov > 0 ? 'deposit' : 'withdrawal';
-
-    const html = `
+  let movs = sorted
+    ? currentAccount.movements.slice().sort((a, b) => a - b)
+    : currentAccount.movements;
+  movs.forEach(function (val, i) {
+    let type = val > 0 ? 'deposit' : 'withdrawal';
+    let html = ` 
       <div class="movements__row">
-        <div class="movements__type movements__type--${type}">${
+          <div class="movements__type movements__type--${type}">${
       i + 1
-    } ${type}</div>
-        <div class="movements__value">${mov}€</div>
-      </div>
-    `;
-
+    }: ${type} </div>
+          <div class="movements__value">${val.toFixed(2)} ${
+      currentAccount.currency
+    }</div>
+      </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
-};
 
-const calcDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
-};
-
-const calcDisplaySummary = function (acc) {
-  const incomes = acc.movements
-    .filter(mov => mov > 0)
-    .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
-
-  const out = acc.movements
-    .filter(mov => mov < 0)
-    .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
-
-  const interest = acc.movements
-    .filter(mov => mov > 0)
-    .map(deposit => (deposit * acc.interestRate) / 100)
-    .filter((int, i, arr) => {
-      // console.log(arr);
-      return int >= 1;
-    })
-    .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
-};
-
-const createUsernames = function (accs) {
-  accs.forEach(function (acc) {
-    acc.username = acc.owner
-      .toLowerCase()
-      .split(' ')
-      .map(name => name[0])
-      .join('');
+  [...document.querySelectorAll('.movements__row')].forEach((row, i) => {
+    if (i % 2 === 0) {
+      row.style.backgroundColor = '#e8e8e8';
+    }
   });
-};
-createUsernames(accounts);
+}
 
-const updateUI = function (acc) {
-  // Display movements
-  displayMovements(acc.movements);
+function displayStats() {
+  labelBalance.textContent = `${currentAccount.balance} ${currentAccount.currency}`;
+  labelSumIn.textContent = `${currentAccount.deposits} ${currentAccount.currency}`;
+  labelSumOut.textContent = `${currentAccount.withdrawals} ${currentAccount.currency}`;
+  labelSumInterest.textContent = `${currentAccount.interest} ${currentAccount.currency}`;
+}
 
-  // Display balance
-  calcDisplayBalance(acc);
-
-  // Display summary
-  calcDisplaySummary(acc);
-};
-
-///////////////////////////////////////
-// Event handlers
-let currentAccount;
-
-btnLogin.addEventListener('click', function (e) {
-  // Prevent form from submitting
-  e.preventDefault();
-
-  currentAccount = accounts.find(
-    acc => acc.username === inputLoginUsername.value
-  );
-  console.log(currentAccount);
-
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    // Display UI and message
+function updateDisplay() {
+  if (currentAccount != '') {
+    containerApp.setAttribute('style', 'opacity: 1;');
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
-    }`;
-    containerApp.style.opacity = 100;
-
-    // Clear input fields
+    }.`;
+    //clear input fields and lose focus
     inputLoginUsername.value = inputLoginPin.value = '';
-    inputLoginPin.blur();
-
-    // Update UI
-    updateUI(currentAccount);
+    inputTransferAmount.value = inputTransferTo.value = '';
+    inputCloseUsername.value = '';
+    inputClosePin.value = '';
+    inputLoanAmount.value = '';
+    document.activeElement.blur();
+    calcTotals();
+    displayMovements();
+    displayStats();
+  } else {
+    containerApp.setAttribute('style', 'opacity: 0;');
+    labelWelcome.textContent = 'Log in to get started';
   }
-});
+}
 
-btnTransfer.addEventListener('click', function (e) {
-  e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
-  const receiverAcc = accounts.find(
-    acc => acc.username === inputTransferTo.value
+function checkLogin(username, pin) {
+  let account = accounts.find(
+    acc => acc.username === username.toLowerCase() && acc.pin.toString() === pin
   );
-  inputTransferAmount.value = inputTransferTo.value = '';
-
-  if (
-    amount > 0 &&
-    receiverAcc &&
-    currentAccount.balance >= amount &&
-    receiverAcc?.username !== currentAccount.username
-  ) {
-    // Doing the transfer
-    currentAccount.movements.push(-amount);
-    receiverAcc.movements.push(amount);
-
-    // Update UI
-    updateUI(currentAccount);
+  if (account) {
+    currentAccount = account;
+    updateDisplay();
+  } else alert('Invalid Login');
+}
+function transferMoney(target, amount) {
+  console.log(`Target: ${target}, Amount: ${amount}`);
+  let targetAcct = isValidAccountByUsername(target);
+  if (targetAcct) {
+    targetAcct.movements.push(amount);
+    currentAccount.movements.push(amount * -1);
+    updateDisplay();
   }
+}
+function isValidAccountByUsername(account) {
+  return accounts.find(acc => acc.username === account.toLowerCase());
+}
+
+//Event Handlers
+accounts.forEach(value => {
+  value.username = createUsername(value.owner);
 });
 
-btnLoan.addEventListener('click', function (e) {
-  e.preventDefault();
-
-  const amount = Number(inputLoanAmount.value);
-
-  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
-
-    // Update UI
-    updateUI(currentAccount);
-  }
-  inputLoanAmount.value = '';
+btnLogin.addEventListener('click', e => {
+  e.preventDefault(); //prevent form from submitting & reloading the page (submit button default behavior)
+  let username = inputLoginUsername.value;
+  let pin = inputLoginPin.value;
+  checkLogin(username, pin);
 });
 
-btnClose.addEventListener('click', function (e) {
+btnTransfer.addEventListener('click', e => {
   e.preventDefault();
-
+  let transferTo = inputTransferTo.value;
+  let transferAmount = Number(inputTransferAmount.value);
+  let validTransferTo = isValidAccountByUsername(transferTo);
   if (
-    inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    validTransferTo &&
+    validTransferTo != currentAccount.username &&
+    transferAmount <= currentAccount.balance &&
+    transferAmount > 0
   ) {
-    const index = accounts.findIndex(
-      acc => acc.username === currentAccount.username
+    transferMoney(transferTo, transferAmount);
+  } else alert('That is not a valid transfer account.');
+});
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+  let closeUser = inputCloseUsername.value;
+  let closePin = Number(inputClosePin.value);
+  if (
+    closeUser === currentAccount.username &&
+    closePin === currentAccount.pin
+  ) {
+    accounts.splice(
+      accounts.findIndex(acc => acc.username === currentAccount.username),
+      1
     );
-    console.log(index);
-    // .indexOf(23)
-
-    // Delete account
-    accounts.splice(index, 1);
-
-    // Hide UI
-    containerApp.style.opacity = 0;
+    currentAccount = '';
+    updateDisplay();
+  } else {
+    alert('Invalid login credentials.');
   }
-
-  inputCloseUsername.value = inputClosePin.value = '';
 });
 
-let sorted = false;
-btnSort.addEventListener('click', function (e) {
+//only grant a loan if there is at least a deposit > 10% of the loan requested
+//introduced bug where you can keep granting yourself exponentially bigger loans.
+btnLoan.addEventListener('click', e => {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  let requestAmount = Number(inputLoanAmount.value);
+  if (requestAmount > 0) {
+    if (currentAccount.movements.some(value => value >= requestAmount * 0.1)) {
+      alert('Loan successfully granted.');
+      currentAccount.movements.push(requestAmount);
+      updateDisplay();
+    } else {
+      alert(
+        'There is not a deposit greater than 10% of the loan amount requested.'
+      );
+    }
+  } else {
+    alert('Loan request must be greater than 0.');
+  }
+});
+
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
   sorted = !sorted;
+  updateDisplay();
 });
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+//===========================================
+// Video 181 Converting and Checking Numbers
+//===========================================
+// console.log(23 === 23.0); //JS expresses all numbers as float
+
+// console.log(0.1 + 0.2); //0.30000000000000004 because infinite cannot be handled 3.333333...
+// console.log(0.1 + 0.2 === 0.3); //false because of rounding errors (pc can't infinite number and rounds)
+
+// //Conversion
+// console.log(Number('23')); //explicit type conversion to Number()
+// console.log(+'23'); //automatic type conversion when it interprets + operator
+
+// //Parsing
+// console.log(Number.parseInt('30px', 10));
+// console.log(Number.parseInt('e23', 10));
+
+// console.log(Number.parseInt('2.5rem'));
+// console.log(Number.parseFloat('2.5rem'));
+
+// //Check if value is NaN
+// console.log(Number.isNaN(+'e23')); //true
+// console.log(Number.isNaN(20)); //false
+// console.log(Number.isNaN(23 / 0)); //false
+// console.log(23 / 0); //Infinity (special number type)
+
+// //Check if value is a number
+// console.log(Number.isFinite(20)); //true
+// console.log(Number.isFinite(23 / 0)); //false
+
+// //check if integer
+// console.log(Number.isInteger(23)); //true
+// console.log(Number.isInteger(23.0)); //true
+// console.log(Number.isInteger(23.2)); //false
+
+//============================
+// Video 182 Math and Rouding
+//============================
+//Roots
+// console.log(Math.sqrt(25));
+// console.log(25 ** (1 / 2)); //square root
+// console.log(8 ** (1 / 3)); //cubic root
+
+// console.log(Math.max(5, 18, '23', 11, 2)); //converts (23)
+// console.log(Math.max(5, 18, '23px', 11, 2)); //but not parses (NaN)
+
+// console.log(Math.min(5, 18, '23', 11, 2)); //2
+
+// console.log(Math.PI);
+
+// console.log(Math.floor(Math.random() * 6) + 1);
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// console.log(randomInt(10, 20));
+// console.log(randomInt(0, 3));
+
+// //Rounding integers
+// console.log(`round 23.3:  ${Math.round(23.3)}`);
+// console.log(`round 23.9:  ${Math.round(23.9)}`);
+// console.log(`ceil 23.3:  ${Math.ceil(23.3)}`);
+// console.log(`ceil 23.9:  ${Math.ceil(23.9)}`);
+// console.log(`floor 23.3:  ${Math.floor(23.3)}`);
+// console.log(`floor 23.9:  ${Math.floor(23.9)}`);
+// console.log(`trunc 23.3:  ${Math.trunc(23.3)}`);
+// console.log(`trunc -23.3: ${Math.trunc(-23.3)}`);
+// console.log(`floor -23.3: ${Math.floor(-23.3)}`);
+
+// //Rounding decimals
+// //wrap decimal in () then .toFixed(n) then +() to convert to Number
+// console.log((2.7).toFixed(0)); //returns a string, not a number
+// console.log((2.7).toFixed(3));
+// console.log(+(2.345).toFixed(2)); //convert back to number with +
+
+//==================================
+// Video 183 The Remainder Operator
+//==================================
+// console.log(5 % 2); //modulo;even determinate
+// function isEven(n) {
+//   return n % 0 === 0;
+// }
+
+//==============================
+// Video 184 Numeric Separators
+//==============================
+// //you can use underscores in numbers, ignored by the engine
+// let diameter = 28_745_600_000;
+// console.log(diameter);
+
+// let cents = 345_99;
+// console.log(cents);
+
+// let transferFee = 15_00; //both 1500
+// let transferFee2 = 1_500;
+
+// //const PI = 3._1415; //numeric separators must be between numbers
+// //console.log(PI);
+
+// console.log(Number('23_000')); //NaN //numeric separators don't work as strings
+// console.log(parseInt('230_000')); //only 230, not 230000
+
+//===============================
+// Video 185 Working with BigInt
+//===============================
+// Numbers are repesented as 64 bits,
+// 53 of which are digits,
+// the rest are storing decimal point position and sign
+
+//Biggest number JS can safely represent
+// Number.MAX_SAFE_INTEGER
+// console.log(2 ** 53 - 1); //biggest number JS can represent
+
+// BigInt n
+//n transforms a regular 64 bit number to a BigInt type
+// console.log(90071992547409910983487612389760982348n);
+// //JS makes it a reg Number first, losing precision
+// console.log(BigInt(90071992547409910983487612389760982348));
+
+// //Operations
+// console.log(10_000n + 10_000n);
+// //cannot use Math. operators
+// //console.log(Math.sqrt(16n)); //TypeError: can't convert BigInt to number
+
+// //cannot mix BigInt and Number
+// let huge = 23498719081223987n;
+// let num = 23;
+// //console.log(huge * num); //TypeError: can't convert BigInt to Number
+// console.log(huge * BigInt(num)); //540470538868151701n
+
+// console.log(20n > 15); //comparison operators work as expected
+// console.log(20n === 20); //false, unless type is compared as well
+// console.log(20n == 20); //true
+
+// //Divisions
+// console.log(10n / 3n); //Rounds to the nearest bigInt
+// console.log(10 / 3);
+
+//==========================
+// Video 186 Creating Dates
+//==========================
