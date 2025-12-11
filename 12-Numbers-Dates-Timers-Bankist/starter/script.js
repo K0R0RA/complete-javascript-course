@@ -114,17 +114,32 @@ function calcTotals() {
 
 function displayMovements() {
   containerMovements.innerHTML = '';
-  let movs = sorted
-    ? currentAccount.movements.slice().sort((a, b) => a - b)
-    : currentAccount.movements;
-  movs.forEach(function (val, i) {
-    let type = val > 0 ? 'deposit' : 'withdrawal';
+  let combinedMovsDates = currentAccount.movements.map((mov, i) => ({
+    movement: mov,
+    date: currentAccount.movementsDates.at(i),
+  }));
+  console.log(combinedMovsDates);
+  // let movs = sorted
+  //   ? currentAccount.movements.slice().sort((a, b) => a - b)
+  //   : currentAccount.movements;
+
+  if (sorted) {
+    combinedMovsDates.sort((a, b) => a.movement - b.movement);
+  }
+
+  combinedMovsDates.forEach(function (obj, i) {
+    let { movement, date } = obj;
+    let type = movement > 0 ? 'deposit' : 'withdrawal';
+    let dateFormatted = new Date(date).toLocaleDateString(
+      currentAccount.locale
+    );
     let html = ` 
       <div class="movements__row">
           <div class="movements__type movements__type--${type}">${
       i + 1
     }: ${type} </div>
-          <div class="movements__value">${val.toFixed(2)} ${
+          <div class="movements__date">${dateFormatted}</div>
+          <div class="movements__value">${movement.toFixed(2)} ${
       currentAccount.currency
     }</div>
       </div>`;
@@ -151,6 +166,10 @@ function updateDisplay() {
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
     }.`;
+    let now = new Date(Date.now());
+    labelDate.innerHTML = `${now.toLocaleDateString(
+      currentAccount.locale
+    )}  ${now.toLocaleTimeString(currentAccount.locale)}`;
     //clear input fields and lose focus
     inputLoginUsername.value = inputLoginPin.value = '';
     inputTransferAmount.value = inputTransferTo.value = '';
@@ -406,3 +425,34 @@ function randomInt(min, max) {
 //==========================
 // Video 186 Creating Dates
 //==========================
+// let now = new Date();
+// console.log(now);
+
+// console.log(new Date('2025/10/11'));
+// console.log(new Date('December 25, 1990'));
+
+// // Z at the end == UTC time
+// // Date will parse to the users local time by default though
+// // account1.movementsDates[0] = '2019-11-18T21:31:17.178Z'
+// // but is converted to localdate = Mon Nov 18 2019 16:31:17 GMT-0500 (Eastern Standard Time)
+// console.log(new Date(account1.movementsDates[0]));
+// console.log(new Date(account1.movementsDates[0]).toUTCString());
+
+// console.log(new Date(2037, 10 /*==Nov,!=Oct:month is 0 based*/, 31, 15, 23, 5));
+// //will auto-correct to december 1st because november has 30 days not 31
+
+// console.log(new Date(0)); //Jan 1 1970 (or Dec 31 1969 in EST)
+// console.log(new Date(3 * 24 * 60 * 60 * 1000));
+// //                   D * Hr * Mn * Sc * MS
+
+// let future = new Date(2037, 10, 19, 12, 23); //builds on local time
+// console.log(future);
+// console.log(future.getFullYear());
+// console.log(future.getMonth()); //10   (0 based)
+// console.log(future.getDay()); //4   (day of the week (0-based))
+// console.log(future.toISOString()); //2037-11-19T17:23:00.000Z (converts to ISO UTC)
+// console.log(future.getTime()); //MS since 1/1/1970
+// console.log(new Date(2142264180000));
+
+// //current timestamp for now
+// console.log(Date.now());
